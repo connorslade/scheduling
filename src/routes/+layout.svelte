@@ -1,15 +1,14 @@
 <script lang="ts">
   import "../app.css";
 
-  import NavDropdown from "$lib/components/NavDropdown.svelte";
   import Link from "$lib/components/Link.svelte";
+  import NavDropdown from "$lib/components/NavDropdown.svelte";
 
-  let { children } = $props();
+  let { children, data } = $props();
 
   let pages = [
     { title: "Home", href: "/" },
     { title: "Events", href: "/events" },
-    { title: "Login", href: "/api/auth/login" },
   ];
 </script>
 
@@ -26,6 +25,21 @@
           >{page.title}</a
         >
       {/each}
+
+      <span>&bull;</span>
+      {#if data.user}
+        <NavDropdown
+          name={data.user.name}
+          href={null}
+          links={[{ name: "Log Out", href: "/auth/logout" }]}
+        />
+      {:else}
+        <a
+          href="/auth/login"
+          class="text-gray-700 hover:text-blue-600 transition-colors duration-300"
+          >Login</a
+        >
+      {/if}
     </div>
   </nav>
 

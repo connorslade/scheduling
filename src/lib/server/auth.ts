@@ -4,23 +4,15 @@ import {
   EXTERNAL_URL,
   REQUIRED_EMAIL_PREFIX,
 } from "$env/static/private";
+import type { UserInfo } from "$lib/types";
 
-import { randomString } from "../util";
+import { random_string } from "../util";
 
-const MAX_AGE = 1000 * 60;
+export const MAX_AGE = 1000 * 60;
 let oauthState: { [key: string]: number } = {};
 
-export type UserInfo = {
-  id: string;
-  email: string;
-  name: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-};
-
 export function redirect_url() {
-  const state = randomString(16);
+  const state = random_string(16);
   const epoch = Date.now();
   oauthState[state] = epoch;
 
@@ -62,7 +54,15 @@ export async function complete(code: string): Promise<UserInfo> {
     },
   );
 
-  return await userInfoResponse.json();
+  let data = await userInfoResponse.json();
+  return {
+    id: data.id,
+    email: data.email,
+    name: data.name,
+    given_name: data.given_name,
+    family_name: data.family_name,
+    picture: data.picture,
+  };
 }
 
 export function invalid_email(user: UserInfo): boolean {

@@ -1,6 +1,6 @@
 const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-export function randomString(length: number) {
+export function random_string(length: number) {
   let result = "";
 
   for (let i = length; i > 0; --i)
