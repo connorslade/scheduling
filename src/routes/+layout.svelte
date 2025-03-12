@@ -1,15 +1,15 @@
 <script lang="ts">
-  import NavDropdown from "$lib/NavDropdown.svelte";
-  import { Instagram, MessageSquare } from "@lucide/svelte";
   import "../app.css";
-  import Link from "$lib/Link.svelte";
+
+  import NavDropdown from "$lib/components/NavDropdown.svelte";
+  import Link from "$lib/components/Link.svelte";
 
   let { children } = $props();
 
   let pages = [
     { title: "Home", href: "/" },
     { title: "Events", href: "/events" },
-    { title: "Login", href: "/login" },
+    { title: "Login", href: "/api/auth/login" },
   ];
 </script>
 
