@@ -67,9 +67,12 @@ export const actions = {
         capacity: form.get(`session-${session_id}-capacity`)?.toString(),
       };
 
-      console.log(session);
-      console.log(Object.values(session));
-      if (Object.values(session).some((value) => value === undefined))
+      if (
+        Object.values(session).some((value) => value === undefined) ||
+        session.title === undefined ||
+        session.slug === undefined ||
+        session.description === undefined
+      )
         error(400, "Not all session fields are filled out.");
 
       let start_time = parse_date(session.start_time);
@@ -78,18 +81,23 @@ export const actions = {
         error(400, "Invalid start/end time");
 
       let capacity = parseInt(session.capacity ?? "");
-      await database.eventSession.update({
+
+      let data = {
+        name: session.title,
+        slug: session.slug,
+        description: session.description,
+        start_time,
+        end_time,
+        capacity,
+        id: session_id,
+        event_id: overview.id,
+      };
+      await database.eventSession.upsert({
         where: {
           id: session_id,
         },
-        data: {
-          name: session.title,
-          slug: session.slug,
-          description: session.description,
-          start_time,
-          end_time,
-          capacity,
-        },
+        create: data,
+        update: data,
       });
     }
 

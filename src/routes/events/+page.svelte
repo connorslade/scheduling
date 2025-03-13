@@ -25,7 +25,7 @@
         <div class="flex items-baseline justify-between gap-2">
           <div class="flex items-center space-x-2">
             <h3 class="text-xl font-semibold">{event.name}</h3>
-            {#if event.admin_user_id.includes(user.id)}
+            {#if user !== null && event.admin_user_id.includes(user.id)}
               <Crown size={18} />
             {/if}
           </div>

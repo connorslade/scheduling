@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import { ChevronRight } from "@lucide/svelte";
+  import { ChevronRight, Plus, Trash } from "@lucide/svelte";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import TextInput from "$lib/components/form/TextInput.svelte";
   import TextareaInput from "$lib/components/form/TextareaInput.svelte";
@@ -10,11 +10,10 @@
   import { date_string, datetime_string } from "$lib/util";
 
   let { data }: PageProps = $props();
-  let { user } = data;
   let event = $state(data.event);
   let sessions = $state(data.sessions);
 
-  let expended: boolean[] = $state(new Array(sessions.length).fill(false));
+  let expanded: boolean[] = $state(new Array(sessions.length).fill(false));
 </script>
 
 <form method="post">
@@ -54,7 +53,35 @@
     />
   </div>
 
-  <Subtitle title="Sessions" level={3} />
+  <div class="flex justify-between items-center">
+    <Subtitle title="Sessions" level={3} />
+    <button
+      type="button"
+      onclick={() => {
+        let now = new Date();
+        now.setMilliseconds(0);
+        now.setSeconds(0);
+
+        expanded.unshift(true);
+        sessions.unshift({
+          id: crypto.randomUUID(),
+          slug: "new-session",
+          name: "New Session",
+          description: "",
+          event_id: event.id,
+          capacity: null,
+          start_time: now,
+          end_time: now,
+        });
+      }}
+    >
+      <Plus
+        size={24}
+        strokeWidth={1.5}
+        class="hover:bg-gray-200 rounded-full cursor-pointer"
+      />
+    </button>
+  </div>
 
   {#each sessions as session, i}
     {@const prefix = `session-${session.id}`}
@@ -62,18 +89,18 @@
       <button
         type="button"
         class="flex items-center space-x-2 cursor-pointer mb-4"
-        onclick={() => (expended[i] = !expended[i])}
+        onclick={() => (expanded[i] = !expanded[i])}
       >
         <ChevronRight
           size={16}
-          class="transition-transform {expended[i]
+          class="transition-transform {expanded[i]
             ? 'transform rotate-90'
             : ''}"
         />
         <h3 class="text-xl font-semibold">{session.name}</h3>
       </button>
       <div
-        class="ml-6 pl-4 border-l border-gray-200 {expended[i] ? '' : 'hidden'}"
+        class="ml-6 pl-4 border-l border-gray-200 {expanded[i] ? '' : 'hidden'}"
       >
         <div class="grid grid-cols-2 gap-2">
           <TextInput
