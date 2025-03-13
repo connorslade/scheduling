@@ -38,9 +38,7 @@
     class:border-b={i !== sessions.length - 1}
   >
     <a href={`/event/${event.slug}/${session.slug}`}>
-      <div class="flex items-baseline justify-between gap-2">
-        <h3 class="text-xl font-semibold">{session.name}</h3>
-      </div>
+      <h3 class="text-xl font-semibold">{session.name}</h3>
       <Text class="text-sm">{session.description}</Text>
     </a>
   </div>

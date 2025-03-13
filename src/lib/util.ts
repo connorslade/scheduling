@@ -55,3 +55,10 @@ export function datetime_string(date: Date | null) {
   if (date === null) return null;
   return date.toISOString().split(".").slice(0, -1).join(".");
 }
+
+export function parse_date(raw: string | undefined) {
+  if (raw === undefined) return null;
+  let date = new Date(raw);
+  if (isNaN(date.getTime())) return null;
+  return date;
+}

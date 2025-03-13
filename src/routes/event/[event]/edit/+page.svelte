@@ -25,12 +25,10 @@
   </div>
 
   <Subtitle title={`Editing ${event.name}`} />
-  <Text>
+  <Text class="mb-8">
     You need to manually click the save button on the top right to avoid losing
     any changes.
   </Text>
-
-  <Subtitle title="Overview" level={3} />
 
   <div class="grid grid-cols-2 gap-2">
     <TextInput title="Title" bind:value={event.name} />
@@ -52,95 +50,4 @@
       value={date_string(event.end_date)}
     />
   </div>
-
-  <div class="flex justify-between items-center">
-    <Subtitle title="Sessions" level={3} />
-    <button
-      type="button"
-      onclick={() => {
-        let now = new Date();
-        now.setMilliseconds(0);
-        now.setSeconds(0);
-
-        expanded.unshift(true);
-        sessions.unshift({
-          id: crypto.randomUUID(),
-          slug: "new-session",
-          name: "New Session",
-          description: "",
-          event_id: event.id,
-          capacity: null,
-          start_time: now,
-          end_time: now,
-        });
-      }}
-    >
-      <Plus
-        size={24}
-        strokeWidth={1.5}
-        class="hover:bg-gray-200 rounded-full cursor-pointer"
-      />
-    </button>
-  </div>
-
-  {#each sessions as session, i}
-    {@const prefix = `session-${session.id}`}
-    <div>
-      <button
-        type="button"
-        class="flex items-center space-x-2 cursor-pointer mb-4"
-        onclick={() => (expanded[i] = !expanded[i])}
-      >
-        <ChevronRight
-          size={16}
-          class="transition-transform {expanded[i]
-            ? 'transform rotate-90'
-            : ''}"
-        />
-        <h3 class="text-xl font-semibold">{session.name}</h3>
-      </button>
-      <div
-        class="ml-6 pl-4 border-l border-gray-200 {expanded[i] ? '' : 'hidden'}"
-      >
-        <div class="grid grid-cols-2 gap-2">
-          <TextInput
-            title="Title"
-            name="{prefix}-title"
-            bind:value={session.name}
-          />
-          <TextInput
-            title="Slug"
-            name="{prefix}-slug"
-            bind:value={session.slug}
-          />
-        </div>
-
-        <TextareaInput
-          title="Description"
-          name="{prefix}-description"
-          rows={2}
-          bind:value={session.description}
-        />
-
-        <div class="grid grid-cols-2 gap-2">
-          <DatetimeInput
-            title="Start Time"
-            name="{prefix}-start_time"
-            value={datetime_string(session.start_time)}
-          />
-          <DatetimeInput
-            title="End Time"
-            name="{prefix}-end_time"
-            value={datetime_string(session.end_time)}
-          />
-        </div>
-
-        <NumericInput
-          title="Capacity"
-          name="{prefix}-capacity"
-          bind:value={session.capacity}
-        />
-      </div>
-    </div>
-  {/each}
 </form>

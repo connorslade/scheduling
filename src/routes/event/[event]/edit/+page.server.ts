@@ -2,6 +2,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import type { Event } from "@prisma/client";
 import { error, redirect } from "@sveltejs/kit";
 import database from "$lib/server/database";
+import { parse_date } from "$lib/util";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   let event = await database.event.findFirst({
@@ -51,63 +52,6 @@ export const actions = {
       },
     });
 
-    let sessions = [];
-    for (let key of form.keys()) {
-      if (key.startsWith("session-") && key.endsWith("-title"))
-        sessions.push(key.split("-").slice(1, -1).join("-"));
-    }
-
-    for (let session_id of sessions) {
-      let session = {
-        title: form.get(`session-${session_id}-title`)?.toString(),
-        slug: form.get(`session-${session_id}-slug`)?.toString(),
-        description: form.get(`session-${session_id}-description`)?.toString(),
-        start_time: form.get(`session-${session_id}-start_time`)?.toString(),
-        end_time: form.get(`session-${session_id}-end_time`)?.toString(),
-        capacity: form.get(`session-${session_id}-capacity`)?.toString(),
-      };
-
-      if (
-        Object.values(session).some((value) => value === undefined) ||
-        session.title === undefined ||
-        session.slug === undefined ||
-        session.description === undefined
-      )
-        error(400, "Not all session fields are filled out.");
-
-      let start_time = parse_date(session.start_time);
-      let end_time = parse_date(session.end_time);
-      if (start_time === null || end_time === null)
-        error(400, "Invalid start/end time");
-
-      let capacity = parseInt(session.capacity ?? "");
-
-      let data = {
-        name: session.title,
-        slug: session.slug,
-        description: session.description,
-        start_time,
-        end_time,
-        capacity,
-        id: session_id,
-        event_id: overview.id,
-      };
-      await database.eventSession.upsert({
-        where: {
-          id: session_id,
-        },
-        create: data,
-        update: data,
-      });
-    }
-
     redirect(303, `/event/${overview.slug}`);
   },
 } satisfies Actions;
-
-function parse_date(raw: string | undefined) {
-  if (raw === undefined) return null;
-  let date = new Date(raw);
-  if (isNaN(date.getTime())) return null;
-  return date;
-}
