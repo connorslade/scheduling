@@ -43,7 +43,7 @@
     </div>
   </nav>
 
-  <div class="max-w-3xl mx-auto mb-4 pl-4 pr-4">
+  <div class="w-3xl mx-auto mb-4 pl-4 pr-4">
     {@render children()}
   </div>
 
