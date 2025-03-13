@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from "./$types";
 import type { Event } from "@prisma/client";
-import { error, fail, redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import database from "$lib/server/database";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -20,27 +20,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   return { event: event as Event, sessions: event.sessions };
 };
 
-/*
-FormData {
-  title: 'Ridge Gives Back 2025',
-  slug: 'ridge-gives-back-2025',
-  brief: 'Ridge Gives Back is a day of service in which every student and staff member at Ridge High School spends the day engaged in service activities.',
-  description: 'Ridge Gives Back is a day of service in which every student and staff member at Ridge High School spends the day engaged in service activities of their choice.  Activities will include trips to charitable associations in the communities surrounding the school, as well as the creation of materials in school that will then be shipped or delivered to nonprofit organizations (e.g., breakfast bags for local soup kitchens).  It is our hope that we can provide a chance for each individual to experience a day strictly for the sake of giving and examine how it makes them feel, what they need (and don’t need) in order to make a difference, and why they might incorporate more intentional altruism into their daily lives.',
-  'start-time': '',
-  'end-time': '',
-  'session-9c2f3914-bb67-45ab-86ca-4b773f08e2d2-title': 'Round Valley Reservoir ',
-  'session-9c2f3914-bb67-45ab-86ca-4b773f08e2d2-slug': 'round-valley',
-  'session-9c2f3914-bb67-45ab-86ca-4b773f08e2d2-description': ' Volunteers will clean and maintain the reservoir and its surrounding areas; bring a lunch and a pair of work gloves if you have them!',
-  'session-9c2f3914-bb67-45ab-86ca-4b773f08e2d2-start_time': '',
-  'session-9c2f3914-bb67-45ab-86ca-4b773f08e2d2-end_time': '',
-  'session-9c2f3914-bb67-45ab-86ca-4b773f08e2d2-capacity': ''
-}
-*/
-
 export const actions = {
   default: async ({ request }) => {
     let form = await request.formData();
-    console.log(form);
 
     let overview = {
       id: form.get("id")?.toString(),
@@ -54,15 +36,6 @@ export const actions = {
 
     if (Object.values(overview).some((value) => value === undefined))
       error(400);
-
-    if (overview.start_time === undefined || overview.end_time === undefined)
-      error(400);
-
-    const parse_date = (raw: string) => {
-      let date = new Date(raw);
-      if (isNaN(date.getTime())) return null;
-      return date;
-    };
 
     await database.event.update({
       where: {
@@ -78,6 +51,55 @@ export const actions = {
       },
     });
 
+    let sessions = [];
+    for (let key of form.keys()) {
+      if (key.startsWith("session-") && key.endsWith("-title"))
+        sessions.push(key.split("-").slice(1, -1).join("-"));
+    }
+
+    for (let session_id of sessions) {
+      let session = {
+        title: form.get(`session-${session_id}-title`)?.toString(),
+        slug: form.get(`session-${session_id}-slug`)?.toString(),
+        description: form.get(`session-${session_id}-description`)?.toString(),
+        start_time: form.get(`session-${session_id}-start_time`)?.toString(),
+        end_time: form.get(`session-${session_id}-end_time`)?.toString(),
+        capacity: form.get(`session-${session_id}-capacity`)?.toString(),
+      };
+
+      console.log(session);
+      console.log(Object.values(session));
+      if (Object.values(session).some((value) => value === undefined))
+        error(400, "Not all session fields are filled out.");
+
+      let start_time = parse_date(session.start_time);
+      let end_time = parse_date(session.end_time);
+      if (start_time === null || end_time === null)
+        error(400, "Invalid start/end time");
+
+      let capacity = parseInt(session.capacity ?? "");
+      await database.eventSession.update({
+        where: {
+          id: session_id,
+        },
+        data: {
+          name: session.title,
+          slug: session.slug,
+          description: session.description,
+          start_time,
+          end_time,
+          capacity,
+        },
+      });
+    }
+
     redirect(303, `/event/${overview.slug}`);
   },
 } satisfies Actions;
+
+function parse_date(raw: string | undefined) {
+  if (raw === undefined) return null;
+  let date = new Date(raw);
+  if (isNaN(date.getTime())) return null;
+  return date;
+}

@@ -16,6 +16,7 @@ export function kebab_case(str: string) {
 export function format_date_range(
   start: Date | null,
   end: Date | null,
+  time: boolean = false,
 ): string | null {
   if (start === null && end === null) return null;
 
@@ -24,14 +25,18 @@ export function format_date_range(
   if (end !== null)
     end = new Date(end.getTime() + end.getTimezoneOffset() * 60000);
 
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
+  const format = (date: Date, time: boolean) =>
+    date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }) +
+    (time
+      ? " " + date.toLocaleTimeString(undefined, { timeStyle: "short" })
+      : "");
 
-  const start_date = start?.toLocaleDateString(undefined, options) ?? null;
-  const end_date = end?.toLocaleDateString(undefined, options) ?? null;
+  const start_date = start !== null ? format(start, time) : null;
+  const end_date = end !== null ? format(end, time) : null;
 
   if (start_date === end_date) return start_date;
 
@@ -44,4 +49,9 @@ export function format_date_range(
 export function date_string(date: Date | null) {
   if (date === null) return null;
   return date.toISOString().split("T")[0];
+}
+
+export function datetime_string(date: Date | null) {
+  if (date === null) return null;
+  return date.toISOString().split(".").slice(0, -1).join(".");
 }

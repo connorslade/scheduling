@@ -7,7 +7,7 @@
   import DatetimeInput from "$lib/components/form/DatetimeInput.svelte";
   import Text from "$lib/components/Text.svelte";
   import NumericInput from "$lib/components/form/NumericInput.svelte";
-  import { date_string } from "$lib/util";
+  import { date_string, datetime_string } from "$lib/util";
 
   let { data }: PageProps = $props();
   let { user } = data;
@@ -60,6 +60,7 @@
     {@const prefix = `session-${session.id}`}
     <div>
       <button
+        type="button"
         class="flex items-center space-x-2 cursor-pointer mb-4"
         onclick={() => (expended[i] = !expended[i])}
       >
@@ -98,12 +99,12 @@
           <DatetimeInput
             title="Start Time"
             name="{prefix}-start_time"
-            bind:value={session.start_time}
+            value={datetime_string(session.start_time)}
           />
           <DatetimeInput
             title="End Time"
             name="{prefix}-end_time"
-            bind:value={session.start_time}
+            value={datetime_string(session.end_time)}
           />
         </div>
 
