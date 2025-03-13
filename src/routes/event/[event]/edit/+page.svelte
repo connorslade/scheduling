@@ -1,0 +1,85 @@
+<script lang="ts">
+  import type { PageProps } from "./$types";
+  import { ChevronRight } from "@lucide/svelte";
+  import Subtitle from "$lib/components/Subtitle.svelte";
+  import TextInput from "$lib/components/form/TextInput.svelte";
+  import TextareaInput from "$lib/components/form/TextareaInput.svelte";
+  import DatetimeInput from "$lib/components/form/DatetimeInput.svelte";
+  import Text from "$lib/components/Text.svelte";
+  import NumericInput from "$lib/components/form/NumericInput.svelte";
+
+  let { data }: PageProps = $props();
+  let { user } = data;
+  let event = $state(data.event);
+  let sessions = $state(data.sessions);
+
+  let expended: boolean[] = $state(new Array(sessions.length).fill(false));
+</script>
+
+<div class="mt-4 flex justify-between">
+  <a href={`/event/${event.slug}`}>← Discard</a>
+  <a href={`/event/${event.slug}`}>Save →</a>
+</div>
+
+<Subtitle title={`Editing ${event.name}`} />
+<Text>
+  You need to manually click the save button on the top right to avoid losing
+  any changes.
+</Text>
+
+<Subtitle title="Overview" level={3} />
+
+<form>
+  <div class="grid grid-cols-2 gap-2">
+    <TextInput title="Title" bind:value={event.name} />
+    <TextInput title="Slug" bind:value={event.slug} />
+  </div>
+
+  <TextareaInput title="Brief" rows={2} bind:value={event.brief} />
+  <TextareaInput title="Description" rows={8} bind:value={event.description} />
+
+  <div class="grid grid-cols-2 gap-2">
+    <DatetimeInput title="Start Time" bind:value={event.start_date} />
+    <DatetimeInput title="End Time" bind:value={event.end_date} />
+  </div>
+
+  <Subtitle title="Sessions" level={3} />
+
+  {#each sessions as session, i}
+    <div>
+      <button
+        class="flex items-center space-x-2 cursor-pointer mb-4"
+        onclick={() => (expended[i] = !expended[i])}
+      >
+        <ChevronRight
+          size={16}
+          class="transition-transform {expended[i]
+            ? 'transform rotate-90'
+            : ''}"
+        />
+        <h3 class="text-xl font-semibold">{session.name}</h3>
+      </button>
+      <div
+        class="ml-6 pl-4 border-l border-gray-200 {expended[i] ? '' : 'hidden'}"
+      >
+        <div class="grid grid-cols-2 gap-2">
+          <TextInput title="Title" bind:value={session.name} />
+          <TextInput title="Slug" bind:value={session.slug} />
+        </div>
+
+        <TextareaInput
+          title="Description"
+          rows={2}
+          bind:value={session.description}
+        />
+
+        <div class="grid grid-cols-2 gap-2">
+          <DatetimeInput title="Start Time" bind:value={session.start_time} />
+          <DatetimeInput title="End Time" bind:value={session.start_time} />
+        </div>
+
+        <NumericInput title="Capacity" bind:value={session.capacity} />
+      </div>
+    </div>
+  {/each}
+</form>

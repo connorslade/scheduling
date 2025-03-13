@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
+  import { Crown } from "@lucide/svelte";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
 
   let { data }: PageProps = $props();
-  let events = data.events;
+  let { user, events } = data;
 </script>
 
 <Subtitle title="Events" level={2} />
@@ -21,7 +22,12 @@
     >
       <a href={`/event/${event.slug}`}>
         <div class="flex items-baseline justify-between gap-2">
-          <h3 class="text-xl font-semibold">{event.name}</h3>
+          <div class="flex items-center space-x-2">
+            <h3 class="text-xl font-semibold">{event.name}</h3>
+            {#if event.admin_user_id.includes(user.id)}
+              <Crown size={18} />
+            {/if}
+          </div>
           {#if event.start_date !== null}
             <p class="text-sm text-gray-500">{event.start_date}</p>
           {/if}

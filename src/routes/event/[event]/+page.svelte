@@ -1,17 +1,26 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
+  import { Crown, Edit, Pencil } from "@lucide/svelte";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
 
   let { data }: PageProps = $props();
-  let { event, sessions } = data;
+  let { user, event, sessions } = data;
 </script>
 
 <div class="mt-4">
   <a href="/events">← Back</a>
 </div>
 
-<Subtitle title={data.event.name} />
+<div class="flex items-center justify-between">
+  <Subtitle title={data.event.name} />
+  {#if event.admin_user_id.includes(user.id)}
+    <a href={`/event/${event.slug}/edit`} title="Edit Event">
+      <Pencil size={18} strokeWidth={1.5} />
+    </a>
+  {/if}
+</div>
+
 {#if event.start_date || event.end_date}
   <Text>{event.start_date ?? ""}-{event.end_date ?? ""}</Text>
 {/if}
