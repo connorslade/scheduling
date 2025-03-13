@@ -3,6 +3,7 @@
   import { Crown } from "@lucide/svelte";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
+  import { format_date_range } from "$lib/util";
 
   let { data }: PageProps = $props();
   let { user, events } = data;
@@ -28,9 +29,9 @@
               <Crown size={18} />
             {/if}
           </div>
-          {#if event.start_date !== null}
-            <p class="text-sm text-gray-500">{event.start_date}</p>
-          {/if}
+          <p class="text-sm text-gray-500">
+            {format_date_range(event.start_date, event.end_date)}
+          </p>
         </div>
         <Text class="text-sm">{event.brief}</Text>
       </a>
