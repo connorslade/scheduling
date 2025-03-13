@@ -29,8 +29,8 @@ model Session {
 
 model Event {
   id          String    @id @default(uuid())
+  slug        String    @unique
   name        String
-  slug        String
   description String
   brief       String
   start_date  DateTime?
@@ -41,10 +41,12 @@ model Event {
 
 model EventSession {
   id          String   @id @default(uuid())
-  event_id    String
+  slug        String   @unique
+  // ↑ Todo: This should only be unique within events
   name        String
+  event_id    String
   description String
-  capacity    Int
+  capacity    Int?
   start_time  DateTime
   end_time    DateTime
 

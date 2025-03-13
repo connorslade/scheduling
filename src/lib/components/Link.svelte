@@ -5,7 +5,7 @@
 <a
   class="text-blue-600 hover:underline"
   {href}
-  target={new_tab ? "_blank" : "_self"}
+  target={new_tab ? "_blank" : ""}
   rel="noopener noreferrer"
 >
   {@render children()}
