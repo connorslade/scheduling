@@ -7,6 +7,7 @@
   import TextareaInput from "$lib/components/form/TextareaInput.svelte";
   import DatetimeInput from "$lib/components/form/DatetimeInput.svelte";
   import NumericInput from "$lib/components/form/NumericInput.svelte";
+  import MarkdownInput from "$lib/components/form/MarkdownInput.svelte";
 
   let { data }: PageProps = $props();
   let event = data.event;
@@ -28,7 +29,8 @@
     <TextInput title="Slug" bind:value={session.slug} />
   </div>
 
-  <TextareaInput
+  <TextareaInput title="Brief" rows={2} bind:value={session.brief} />
+  <MarkdownInput
     title="Description"
     rows={4}
     bind:value={session.description}

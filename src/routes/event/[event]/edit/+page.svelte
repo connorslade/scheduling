@@ -1,18 +1,17 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
   import { enhance } from "$app/forms";
-  import { date_string, datetime_string } from "$lib/util/date";
+  import { date_string } from "$lib/util/date";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import TextInput from "$lib/components/form/TextInput.svelte";
   import TextareaInput from "$lib/components/form/TextareaInput.svelte";
   import DatetimeInput from "$lib/components/form/DatetimeInput.svelte";
   import Text from "$lib/components/Text.svelte";
+  import Link from "$lib/components/Link.svelte";
+  import MarkdownInput from "$lib/components/form/MarkdownInput.svelte";
 
   let { data }: PageProps = $props();
   let event = $state(data.event);
-  let sessions = $state(data.sessions);
-
-  let expanded: boolean[] = $state(new Array(sessions.length).fill(false));
 </script>
 
 <form method="post" use:enhance>
@@ -35,7 +34,7 @@
   </div>
 
   <TextareaInput title="Brief" rows={2} bind:value={event.brief} />
-  <TextareaInput title="Description" rows={8} bind:value={event.description} />
+  <MarkdownInput title="Description" rows={8} bind:value={event.description} />
 
   <div class="grid grid-cols-2 gap-2">
     <DatetimeInput

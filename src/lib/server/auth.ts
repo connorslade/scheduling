@@ -6,7 +6,7 @@ import {
 } from "$env/static/private";
 import type { UserInfo } from "$lib/types";
 
-import { random_string } from "../util";
+import { random_string } from "../util/misc";
 
 export const MAX_AGE = 1000 * 60;
 let oauthState: { [key: string]: number } = {};

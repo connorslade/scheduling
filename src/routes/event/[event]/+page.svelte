@@ -4,6 +4,7 @@
   import { format_date_range } from "$lib/util/date";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
+  import Markdown from "$lib/components/Markdown.svelte";
 
   let { data }: PageProps = $props();
   let { user, event, sessions } = data;
@@ -12,14 +13,13 @@
   let upload: HTMLInputElement | null = $state(null);
 
   let search = $state("");
-  let filtered_sessions = $derived(
-    sessions
-      .filter(
-        (x) =>
-          search == "" || x.name.toLowerCase().includes(search.toLowerCase()),
-      )
-      .toSorted((a, b) => a.start_time.getTime() - b.start_time.getTime()),
-  );
+  let filtered_sessions = $derived.by(() => {
+    let search_empty = search == "";
+    let search_l = search.toLowerCase();
+    return sessions
+      .filter((x) => search_empty || x.name.toLowerCase().includes(search_l))
+      .toSorted((a, b) => a.start_time.getTime() - b.start_time.getTime());
+  });
 </script>
 
 <div class="mt-4">
@@ -41,7 +41,7 @@
   </Text>
 {/if}
 
-<Text>{event.description}</Text>
+<Markdown source={event.description} />
 
 <div class="flex items-center justify-between">
   <Subtitle title="Sessions" level={3} />
@@ -106,7 +106,7 @@
   >
     <a href={`/event/${event.slug}/${session.slug}`}>
       <h3 class="text-xl font-semibold">{session.name}</h3>
-      <Text class="text-sm">{session.description}</Text>
+      <Text class="text-sm">{session.brief}</Text>
     </a>
   </div>
 {/each}

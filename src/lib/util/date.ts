@@ -5,11 +5,6 @@ export function format_date_range(
 ): string | null {
   if (start === null && end === null) return null;
 
-  if (start !== null)
-    start = new Date(start.getTime() + start.getTimezoneOffset() * 60000);
-  if (end !== null)
-    end = new Date(end.getTime() + end.getTimezoneOffset() * 60000);
-
   const format = (date: Date, time: boolean) =>
     date.toLocaleDateString(undefined, {
       year: "numeric",
@@ -36,9 +31,11 @@ export function date_string(date: Date | null) {
   return date.toISOString().split("T")[0];
 }
 
-export function datetime_string(date: Date | null) {
+export function datetime_string(date: Date | null): string | null {
   if (date === null) return null;
-  return date.toISOString().split(".").slice(0, -1).join(".");
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
+    .toISOString()
+    .split(".")[0];
 }
 
 export function parse_date(raw: string | undefined) {

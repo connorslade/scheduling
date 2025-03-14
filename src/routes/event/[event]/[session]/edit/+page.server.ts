@@ -26,6 +26,7 @@ export const actions = {
       id: form.get("id")?.toString(),
       title: form.get(`title`)?.toString(),
       slug: form.get(`slug`)?.toString(),
+      brief: form.get(`brief`)?.toString(),
       description: form.get(`description`)?.toString(),
       start_time: form.get(`start-time`)?.toString(),
       end_time: form.get(`end-time`)?.toString(),
@@ -36,7 +37,8 @@ export const actions = {
       Object.values(session).some((value) => value === undefined) ||
       session.title === undefined ||
       session.slug === undefined ||
-      session.description === undefined
+      session.description === undefined ||
+      session.brief === undefined
     )
       error(400, "Not all session fields are filled out.");
 
@@ -54,6 +56,7 @@ export const actions = {
       data: {
         name: session.title,
         slug: session.slug,
+        brief: session.brief,
         description: session.description,
         start_time,
         end_time,

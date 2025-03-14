@@ -46,6 +46,7 @@ model EventSession {
   name        String
   event_id    String
   description String
+  brief       String
   capacity    Int?
   start_time  DateTime
   end_time    DateTime
