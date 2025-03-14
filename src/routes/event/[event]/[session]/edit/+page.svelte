@@ -1,9 +1,8 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import Subtitle from "$lib/components/Subtitle.svelte";
-  import Text from "$lib/components/Text.svelte";
+  import { enhance } from "$app/forms";
   import { datetime_string, format_date_range } from "$lib/util";
-  import { Pencil } from "@lucide/svelte";
+  import Subtitle from "$lib/components/Subtitle.svelte";
   import TextInput from "$lib/components/form/TextInput.svelte";
   import TextareaInput from "$lib/components/form/TextareaInput.svelte";
   import DatetimeInput from "$lib/components/form/DatetimeInput.svelte";
@@ -14,7 +13,7 @@
   let session = $state(data.session);
 </script>
 
-<form method="post">
+<form method="post" use:enhance>
   <input type="hidden" name="id" value={session.id} />
 
   <div class="mt-4 flex justify-between">

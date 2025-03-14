@@ -1,13 +1,12 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import { ChevronRight, Plus, Trash } from "@lucide/svelte";
+  import { enhance } from "$app/forms";
+  import { date_string, datetime_string } from "$lib/util";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import TextInput from "$lib/components/form/TextInput.svelte";
   import TextareaInput from "$lib/components/form/TextareaInput.svelte";
   import DatetimeInput from "$lib/components/form/DatetimeInput.svelte";
   import Text from "$lib/components/Text.svelte";
-  import NumericInput from "$lib/components/form/NumericInput.svelte";
-  import { date_string, datetime_string } from "$lib/util";
 
   let { data }: PageProps = $props();
   let event = $state(data.event);
@@ -16,7 +15,7 @@
   let expanded: boolean[] = $state(new Array(sessions.length).fill(false));
 </script>
 
-<form method="post">
+<form method="post" use:enhance>
   <input type="hidden" name="id" value={event.id} />
 
   <div class="mt-4 flex justify-between">
