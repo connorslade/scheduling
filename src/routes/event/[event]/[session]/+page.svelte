@@ -2,7 +2,7 @@
   import type { PageProps } from "./$types";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
-  import { format_date_range } from "$lib/util";
+  import { format_date_range } from "$lib/util/date";
   import { Pencil } from "@lucide/svelte";
 
   let { data }: PageProps = $props();

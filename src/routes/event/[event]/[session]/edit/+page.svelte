@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
   import { enhance } from "$app/forms";
-  import { datetime_string, format_date_range } from "$lib/util";
+  import { datetime_string, format_date_range } from "$lib/util/date";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import TextInput from "$lib/components/form/TextInput.svelte";
   import TextareaInput from "$lib/components/form/TextareaInput.svelte";

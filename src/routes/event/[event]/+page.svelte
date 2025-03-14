@@ -3,7 +3,7 @@
   import { Crown, Edit, Import, Pencil, Plus, Search } from "@lucide/svelte";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
-  import { format_date_range } from "$lib/util";
+  import { format_date_range } from "$lib/util/date";
 
   let { data }: PageProps = $props();
   let { user, event, sessions } = data;

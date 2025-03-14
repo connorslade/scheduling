@@ -1,18 +1,3 @@
-const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-export function random_string(length: number) {
-  let result = "";
-
-  for (let i = length; i > 0; --i)
-    result += chars[Math.floor(Math.random() * chars.length)];
-
-  return result;
-}
-
-export function kebab_case(str: string) {
-  return str.toLowerCase().replace(/\s/g, "-");
-}
-
 export function format_date_range(
   start: Date | null,
   end: Date | null,
@@ -61,53 +46,4 @@ export function parse_date(raw: string | undefined) {
   let date = new Date(raw);
   if (isNaN(date.getTime())) return null;
   return date;
-}
-
-export function parse_csv(raw: string): string[][] {
-  let rows: string[][] = [];
-  let row = [];
-
-  let i = 0;
-  let in_quote = false;
-  let working = "";
-
-  const skip_whitespace = () => {
-    while (++i < raw.length && raw[i] == " ") {}
-    i--;
-  };
-
-  skip_whitespace();
-  while (i < raw.length) {
-    let chr = raw[i];
-
-    if (in_quote) {
-      if (chr == '"') {
-        if (++i < raw.length && raw[i] == '"') working += '"';
-        else {
-          in_quote = false;
-          row.push(working);
-          working = "";
-          i--;
-        }
-      } else working += chr;
-    } else {
-      if (chr == "\n") {
-        row.push(working);
-        rows.push(row);
-        working = "";
-        row = [];
-      } else if (chr == ",") {
-        row.push(working);
-        working = "";
-        skip_whitespace();
-      } else if (chr == '"') in_quote = true;
-      else working += chr;
-    }
-
-    i++;
-  }
-
-  if (working.length > 0) row.push(working);
-  if (row.length > 0) rows.push(row);
-  return rows;
 }

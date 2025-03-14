@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { kebab_case } from "$lib/util";
+  import { kebab_case } from "$lib/util/misc";
   import Label from "./Label.svelte";
 
   let {

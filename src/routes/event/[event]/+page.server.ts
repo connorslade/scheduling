@@ -2,7 +2,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import type { Event, EventSession, Session } from "@prisma/client";
 import { error } from "@sveltejs/kit";
 import database from "$lib/server/database";
-import { parse_csv } from "$lib/util";
+import { parse_csv } from "$lib/util/csv";
 
 export const load: PageServerLoad = async ({ params }) => {
   let event = await database.event.findFirst({

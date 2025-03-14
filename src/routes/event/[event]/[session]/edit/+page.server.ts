@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
 import database from "$lib/server/database";
-import { parse_date } from "$lib/util";
+import { parse_date } from "$lib/util/date";
 
 export const load: PageServerLoad = async ({ params }) => {
   let session = await database.eventSession.findFirst({

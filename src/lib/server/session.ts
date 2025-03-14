@@ -1,6 +1,6 @@
 import type { UserInfo } from "$lib/types";
 import database from "$lib/server/database";
-import { random_string } from "$lib/util";
+import { random_string } from "$lib/util/misc";
 
 export async function create_session(user: UserInfo): Promise<string> {
   let session_id = random_string(16);
