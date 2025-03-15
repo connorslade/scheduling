@@ -25,12 +25,15 @@
     <div class="flex space-x-4">
       <button
         class="cursor-pointer"
-        title="Delete Event"
+        title="Delete Session"
         onclick={() => (confirm_delete = true)}
       >
         <Trash size={18} strokeWidth={1.5} />
       </button>
-      <a href={`/event/${event.slug}/${session.slug}/edit`} title="Edit Event">
+      <a
+        href={`/event/${event.slug}/${session.slug}/edit`}
+        title="Edit Session"
+      >
         <Pencil size={18} strokeWidth={1.5} />
       </a>
     </div>
@@ -51,7 +54,7 @@
   </Text>
 
   <div class="grid grid-cols-2 gap-3">
-    <form use:enhance method="post" class="w-full">
+    <form use:enhance method="post" action="?/delete" class="w-full">
       <Button class="w-full" type="submit">Delete</Button>
     </form>
     <Button on_click={() => (confirm_delete = false)}>Cancel</Button>

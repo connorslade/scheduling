@@ -1,16 +1,20 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import { Import, Pencil, Plus, Search } from "@lucide/svelte";
+  import { enhance } from "$app/forms";
+  import { Import, Pencil, Plus, Search, Trash } from "@lucide/svelte";
   import { format_date_range } from "$lib/util/date";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
   import Markdown from "$lib/components/Markdown.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import Button from "$lib/components/Button.svelte";
 
   let { data }: PageProps = $props();
   let { user, event, sessions } = data;
 
   let upload_form: HTMLFormElement | null = $state(null);
   let upload: HTMLInputElement | null = $state(null);
+  let confirm_delete = $state(false);
 
   let search = $state("");
   let filtered_sessions = $derived.by(() => {
@@ -29,9 +33,18 @@
 <div class="flex items-center justify-between">
   <Subtitle title={data.event.name} />
   {#if event.admin_user_id.includes(user.id)}
-    <a href={`/event/${event.slug}/edit`} title="Edit Event">
-      <Pencil size={18} strokeWidth={1.5} />
-    </a>
+    <div class="flex space-x-4">
+      <button
+        class="cursor-pointer"
+        title="Delete Event"
+        onclick={() => (confirm_delete = true)}
+      >
+        <Trash size={18} strokeWidth={1.5} />
+      </button>
+      <a href={`/event/${event.slug}/edit`} title="Edit Event">
+        <Pencil size={18} strokeWidth={1.5} />
+      </a>
+    </div>
   {/if}
 </div>
 
@@ -114,3 +127,17 @@
 {#if filtered_sessions.length == 0 && sessions.length > 0}
   <Text>No sessions matched the filter.</Text>
 {/if}
+
+<Modal bind:show={confirm_delete}>
+  <h3 class="text-xl font-semibold">Confirm Deletion</h3>
+  <Text class="mb-4 mt-4">
+    Do you really want to delete the {event.name} event? This action can't be reversed!
+  </Text>
+
+  <div class="grid grid-cols-2 gap-3">
+    <form use:enhance method="post" action="?/delete" class="w-full">
+      <Button class="w-full" type="submit">Delete</Button>
+    </form>
+    <Button on_click={() => (confirm_delete = false)}>Cancel</Button>
+  </div>
+</Modal>

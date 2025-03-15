@@ -7,6 +7,7 @@ import {
 import type { UserInfo } from "$lib/types";
 
 import { random_string } from "../util/misc";
+import database from "./database";
 
 export const MAX_AGE = 1000 * 60;
 let oauthState: { [key: string]: number } = {};
@@ -69,4 +70,17 @@ export function invalid_email(user: UserInfo): boolean {
   return (
     REQUIRED_EMAIL_PREFIX !== "" && !user.email.endsWith(REQUIRED_EMAIL_PREFIX)
   );
+}
+
+export async function is_admin(
+  event_slug: string,
+  user_id: string,
+): Promise<boolean> {
+  let event = await database.event.findFirst({
+    where: {
+      slug: event_slug,
+    },
+  });
+
+  return event?.admin_user_id.includes(user_id) ?? false;
 }
