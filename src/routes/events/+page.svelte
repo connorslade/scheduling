@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import { Crown } from "@lucide/svelte";
+  import { Crown, Plus } from "@lucide/svelte";
   import Subtitle from "$lib/components/Subtitle.svelte";
   import Text from "$lib/components/Text.svelte";
   import { format_date_range } from "$lib/util/date";
@@ -9,7 +9,12 @@
   let { user, events } = data;
 </script>
 
-<Subtitle title="Events" level={2} />
+<div class="flex justify-between items-center">
+  <Subtitle title="Events" level={2} />
+  <a href="/events/new" title="New Event">
+    <Plus size={24} strokeWidth={1.2} />
+  </a>
+</div>
 
 {#if events.length == 0}
   <Text>No events yet...</Text>

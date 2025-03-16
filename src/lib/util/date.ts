@@ -32,7 +32,7 @@ export function date_string(date: Date | null) {
 }
 
 export function datetime_string(date: Date | null): string | null {
-  if (date === null) return null;
+  if (date === null || date === undefined) return null;
   return new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
     .toISOString()
     .split(".")[0];
