@@ -31,15 +31,15 @@ export function date_string(date: Date | null) {
   return date.toISOString().split("T")[0];
 }
 
-export function datetime_string(date: Date | null): string | null {
+export function datetime_string(date: Date | null | undefined): string | null {
   if (date === null || date === undefined) return null;
   return new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
     .toISOString()
     .split(".")[0];
 }
 
-export function parse_date(raw: string | undefined) {
-  if (raw === undefined) return null;
+export function parse_date(raw: string | null | undefined) {
+  if (raw === null || raw === undefined) return null;
   let date = new Date(raw);
   if (isNaN(date.getTime())) return null;
   return date;

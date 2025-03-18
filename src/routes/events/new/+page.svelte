@@ -16,4 +16,4 @@
   };
 </script>
 
-<EventEdit event={empty_event} back="/events" prefix="Creating" />
+<EventEdit form={empty_event} back="/events" prefix="Creating" />

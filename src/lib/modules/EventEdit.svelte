@@ -31,7 +31,7 @@
   </Text>
 
   <div class="grid grid-cols-2 gap-2">
-    <TextInput title="Title" bind:value={event.name} />
+    <TextInput title="Title" name="name" bind:value={event.name} />
     <TextInput title="Slug" bind:value={event.slug} />
   </div>
 
@@ -41,11 +41,13 @@
   <div class="grid grid-cols-2 gap-2">
     <DatetimeInput
       title="Start Time"
+      name="start_date"
       time={false}
       value={date_string(event.start_date)}
     />
     <DatetimeInput
       title="End Time"
+      name="end_date"
       time={false}
       value={date_string(event.end_date)}
     />
